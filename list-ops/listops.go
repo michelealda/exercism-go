@@ -7,17 +7,18 @@ type binFunc func(x, y int) int
 type predFunc func(n int) bool
 type unaryFunc func(x int) int
 
-// Foldr aggregates a list folding from the head to the tail
+// Foldr aggregates a list folding from the tail to the head
 func (list IntList) Foldr(fn binFunc, acc int) int {
+	flipFn := func(x, y int) int { return fn(y, x) }
+	return list.Reverse().Foldl(flipFn, acc)
+}
+
+// Foldl aggregates a list folding from the head to the tail
+func (list IntList) Foldl(fn binFunc, acc int) int {
 	for _, e := range list {
 		acc = fn(acc, e)
 	}
 	return acc
-}
-
-// Foldl aggregates a list folding from the tail to the head
-func (list IntList) Foldl(fn binFunc, acc int) int {
-	return list.Reverse().Foldr(fn, acc)
 }
 
 // Length return the lenght of the list

@@ -1,6 +1,11 @@
 package raindrops
 
-import "fmt"
+import "strconv"
+
+type factor struct {
+	divisor int
+	word    string
+}
 
 //Convert a
 func Convert(n int) string {
@@ -11,19 +16,19 @@ func Convert(n int) string {
 		return ""
 	}
 
-	vocabulary := map[int]string{
-		3: "Pling",
-		5: "Plang",
-		7: "Plong",
+	vocabulary := []factor{
+		{3, "Pling"},
+		{5, "Plang"},
+		{7, "Plong"},
 	}
 
 	result := ""
-	for k, v := range vocabulary {
-		result = result + divisible(n, k, v)
+	for _, x := range vocabulary {
+		result += divisible(n, x.divisor, x.word)
 	}
 
 	if result != "" {
 		return result
 	}
-	return fmt.Sprint(n)
+	return strconv.Itoa(n)
 }

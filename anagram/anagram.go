@@ -5,21 +5,17 @@ import (
 	"strings"
 )
 
-func stringToInts(s string) []int {
-	ints := make([]int, len(s))
-
-	for i, c := range s {
-		ints[i] = int(c - 0)
-	}
-	sort.Ints(ints)
-	return ints
+func orderStringCharacters(s string) []string {
+	c := strings.Split(s, "")
+	sort.Strings(c)
+	return c
 }
 
 func isAnagram(s, c string) bool {
 	if len(s) != len(c) || s == c {
 		return false
 	}
-	rs, rc := stringToInts(s), stringToInts(c)
+	rs, rc := orderStringCharacters(s), orderStringCharacters(c)
 
 	for i := range rs {
 		if rs[i] != rc[i] {

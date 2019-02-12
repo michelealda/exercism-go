@@ -1,68 +1,58 @@
 package encode
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"unicode"
 )
 
-type item struct {
-	k     rune
-	count int
-}
-
 //RunLengthEncode using RLE
 func RunLengthEncode(s string) string {
-	if len(s) == 0 {
-		return s
-	}
-	counter := []item{}
-
-	for i, c := range s {
-		if i == 0 {
-			counter = append(counter, item{c, 1})
-		} else if c == rune(s[i-1]) {
-			counter[len(counter)-1].count++
-		} else {
-			counter = append(counter, item{c, 1})
-		}
-
-	}
-
 	result := ""
-	for _, c := range counter {
-		if c.count > 1 {
-			result = result + strconv.Itoa(c.count) + string(c.k)
-		} else {
-			result += string(c.k)
+	c := 1
+	for i, x := range s {
+		if i == 0 {
+			continue
 		}
-
+		if x == rune(s[i-1]) {
+			c++
+		} else {
+			result, c = add(c, i, s, result)
+		}
+	}
+	// last item is counted but not yet added
+	if len(s) > 0 {
+		result, _ = add(c, len(s), s, result)
 	}
 	return result
 }
 
+func add(times, index int, original, result string) (string, int) {
+	if times > 1 {
+		result += fmt.Sprintf("%d%c", times, original[index-1])
+		times = 1
+	} else {
+		result += fmt.Sprintf("%c", original[index-1])
+	}
+	return result, times
+}
+
 //RunLengthDecode using RLE
 func RunLengthDecode(s string) string {
-	if len(s) == 0 {
-		return s
-	}
-	result := ""
-	for i, c := range s {
-		if unicode.IsNumber(c) {
-			continue
-		}
-
-		if i > 0 {
-			p := rune(s[i-1])
-
-			if unicode.IsNumber(p) {
-				times, _ := strconv.Atoi(string(p))
-				result += strings.Repeat(string(c), times)
-			}
+	result, countAsString := "", ""
+	for _, x := range s {
+		if unicode.IsDigit(x) {
+			countAsString += string(x)
 		} else {
-			result += string(c)
+			c, err := strconv.Atoi(countAsString)
+			if err != nil {
+				result += string(x)
+			} else {
+				result += strings.Repeat(string(x), c)
+			}
+			countAsString = ""
 		}
-
 	}
 	return result
 }

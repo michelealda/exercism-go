@@ -4,7 +4,6 @@ import "testing"
 
 func TestLargestSeriesProduct(t *testing.T) {
 	for _, test := range tests {
-		t.Logf("Start LargestSeriesProduct(%s, %d)", test.digits, test.span)
 		p, err := LargestSeriesProduct(test.digits, test.span)
 		if test.ok {
 			// we do not expect error

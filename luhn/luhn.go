@@ -5,11 +5,6 @@ import (
 	"strings"
 )
 
-func isSecondDigit(n string, i int) bool {
-	return len(n)%2 == 0 && i%2 == 0 ||
-		len(n)%2 == 1 && i%2 == 1
-}
-
 //Valid calculate the Luhn checksum of a string of digits
 func Valid(s string) bool {
 	sum := 0
@@ -24,7 +19,7 @@ func Valid(s string) bool {
 			return false
 		}
 		tosum := x
-		if isSecondDigit(s, i) {
+		if len(s)%2 == i%2 {
 			tosum = (x * 2)
 			if tosum > 9 {
 				tosum -= 9

@@ -12,20 +12,19 @@ func Valid(s string) bool {
 	if len(s) < 2 {
 		return false
 	}
-
+	parity := len(s) % 2
 	for i := range s {
-		x, err := strconv.Atoi(string(s[i]))
+		digit, err := strconv.Atoi(string(s[i]))
 		if err != nil {
 			return false
 		}
-		tosum := x
-		if len(s)%2 == i%2 {
-			tosum = (x * 2)
-			if tosum > 9 {
-				tosum -= 9
+		if i%2 == parity {
+			digit *= 2
+			if digit > 9 {
+				digit -= 9
 			}
 		}
-		sum += tosum
+		sum += digit
 	}
 	return sum%10 == 0
 }

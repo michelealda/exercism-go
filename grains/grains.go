@@ -13,10 +13,8 @@ func Square(n int) (uint64, error) {
 }
 
 //Total calculates the sum of the 64 squares
-func Total() (sum uint64) {
-	for i := 1; i <= 64; i++ {
-		x, _ := Square(i)
-		sum += x
-	}
-	return sum
+func Total() uint64 {
+	//turns out the total of n squares is
+	// (2**n)-1
+	return (1 << 64) - 1
 }

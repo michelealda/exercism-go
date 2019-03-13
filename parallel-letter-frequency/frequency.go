@@ -13,20 +13,17 @@ func Frequency(s string) FreqMap {
 	return m
 }
 
-func concurrentFreq(xs []string, c chan FreqMap) {
-	for _, s := range xs {
-		c <- Frequency(s)
-	}
-	close(c)
-}
-
 // ConcurrentFrequency counts the frequency of runes in a string array
 func ConcurrentFrequency(xs []string) FreqMap {
 	c := make(chan FreqMap)
-	go concurrentFreq(xs, c)
+	for _, s := range xs {
+		go func(s string) {
+			c <- Frequency(s)
+		}(s)
+	}
 	m := FreqMap{}
-	for v := range c {
-		for r, n := range v {
+	for range xs {
+		for r, n := range <-c {
 			m[r] += n
 		}
 	}
